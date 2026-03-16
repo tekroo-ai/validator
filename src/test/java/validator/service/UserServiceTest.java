@@ -1,7 +1,5 @@
 package validator.service;
 
-import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.h2.H2DatabasePlugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import validator.model.User;
@@ -16,27 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
     
     private UserService userService;
-    private Jdbi jdbi;
     
     @BeforeEach
     void setUp() {
-        jdbi = Jdbi.create("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1")
-            .installPlugin(new H2DatabasePlugin());
-        
-        // Reset schema
-        jdbi.withHandle(handle -> {
-            handle.execute("DROP TABLE IF EXISTS users");
-            handle.execute("""
-                CREATE TABLE users (
-                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    email VARCHAR(255) NOT NULL
-                )
-                """);
-            return null;
-        });
-        
-        UserRepository userRepository = new JdbiUserRepository(jdbi);
+        // Reset schema - create new in-memory repository for each test
+        UserRepository userRepository = new JdbiUserRepository();
         userService = new UserService(userRepository);
     }
     
