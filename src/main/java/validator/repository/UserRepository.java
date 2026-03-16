@@ -38,4 +38,23 @@ public interface UserRepository {
      * @param id the user id to delete
      */
     void deleteById(long id);
+    
+    /**
+     * Finds all users with pagination support.
+     * 
+     * @param offset the number of users to skip
+     * @param limit the maximum number of users to return
+     * @return list of users within the specified range
+     */
+    List<User> findAll(int offset, int limit);
+    
+    /**
+     * Finds users by name containing the specified query with pagination support.
+     * 
+     * @param query the search query to match against user names
+     * @param offset the number of users to skip
+     * @param limit the maximum number of users to return
+     * @return list of users whose names contain the query within the specified range
+     */
+    List<User> findByNameContaining(String query, int offset, int limit);
 }

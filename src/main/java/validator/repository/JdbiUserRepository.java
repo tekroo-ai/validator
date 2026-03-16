@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * In-memory implementation of UserRepository for testing without external dependencies.
@@ -60,5 +61,40 @@ public class JdbiUserRepository implements UserRepository {
         }
         
         users.remove(id);
+    }
+    
+    @Override
+    public List<User> findAll(int offset, int limit) {
+        if (offset < 0) {
+            throw new IllegalArgumentException("Offset must be non-negative");
+        }
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Limit must be positive");
+        }
+        
+        List<User> allUsers = new ArrayList<>(users.values());
+        return allUsers.stream()
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<User> findByNameContaining(String query, int offset, int limit) {
+        if (query == null) {
+            throw new IllegalArgumentException("Query cannot be null");
+        }
+        if (offset < 0) {
+            throw new IllegalArgumentException("Offset must be non-negative");
+        }
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Limit must be positive");
+        }
+        
+        return users.values().stream()
+                .filter(user -> user.name() != null && user.name().toLowerCase().contains(query.toLowerCase()))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }
