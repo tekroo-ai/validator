@@ -88,14 +88,47 @@ public class UserController {
     }
     
     /**
-     * Gets all users.
+     * Gets all users with optional pagination and search parameters.
      * 
      * @param ctx the Javalin context
      */
     public void getAllUsers(Context ctx) {
         try {
-            List<User> users = userService.listAll();
+            // Parse query parameters with defaults
+            String pageParam = ctx.queryParam("page");
+            String pageSizeParam = ctx.queryParam("pageSize");
+            String search = ctx.queryParam("search");
+            
+            int page = pageParam != null ? Integer.parseInt(pageParam) : 1;
+            int pageSize = pageSizeParam != null ? Integer.parseInt(pageSizeParam) : 10;
+            
+            if (page < 1) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Page must be at least 1");
+                ctx.status(400).json(errorResponse);
+                return;
+            }
+            
+            if (pageSize <= 0 || pageSize > 1000) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Page size must be between 1 and 1000");
+                ctx.status(400).json(errorResponse);
+                return;
+            }
+            
+            List<User> users;
+            if (search != null && !search.trim().isEmpty()) {
+                users = userService.searchByName(search, page, pageSize);
+            } else {
+                users = userService.listPaged(page, pageSize);
+            }
+            
             ctx.status(200).json(users);
+            
+        } catch (NumberFormatException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid numeric parameter");
+            ctx.status(400).json(errorResponse);
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Server error");
