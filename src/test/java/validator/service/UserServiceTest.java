@@ -2,6 +2,7 @@ package validator.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import validator.exception.FieldValidationException;
 import validator.model.User;
 import validator.repository.JdbiUserRepository;
 import validator.repository.UserRepository;
@@ -34,11 +35,12 @@ class UserServiceTest {
     
     @Test
     void createUserWithInvalidEmailThrowsException() {
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        FieldValidationException exception = assertThrows(
+            FieldValidationException.class,
             () -> userService.createUser("John Doe", "invalid-email")
         );
         
+        assertEquals("email", exception.getFieldName());
         assertEquals("Invalid email format", exception.getMessage());
     }
     
