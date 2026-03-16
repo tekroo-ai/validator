@@ -61,4 +61,51 @@ public class UserService {
     public List<User> listAll() {
         return userRepository.findAll();
     }
+    
+    /**
+     * Lists users with pagination support.
+     * 
+     * @param page the page number (1-based)
+     * @param pageSize the number of users per page
+     * @return list of users for the specified page
+     * @throws IllegalArgumentException if page < 1 or pageSize <= 0 or pageSize > 1000
+     */
+    public List<User> listPaged(int page, int pageSize) {
+        if (page < 1) {
+            throw new IllegalArgumentException("Page must be at least 1");
+        }
+        if (pageSize <= 0) {
+            throw new IllegalArgumentException("Page size must be positive");
+        }
+        if (pageSize > 1000) {
+            throw new IllegalArgumentException("Page size cannot exceed 1000");
+        }
+        
+        int offset = (page - 1) * pageSize;
+        return userRepository.findAll(offset, pageSize);
+    }
+    
+    /**
+     * Searches users by name containing the specified query with pagination support.
+     * 
+     * @param query the search query to match against user names
+     * @param page the page number (1-based)
+     * @param pageSize the number of users per page
+     * @return list of users whose names contain the query for the specified page
+     * @throws IllegalArgumentException if page < 1 or pageSize <= 0 or pageSize > 1000
+     */
+    public List<User> searchByName(String query, int page, int pageSize) {
+        if (page < 1) {
+            throw new IllegalArgumentException("Page must be at least 1");
+        }
+        if (pageSize <= 0) {
+            throw new IllegalArgumentException("Page size must be positive");
+        }
+        if (pageSize > 1000) {
+            throw new IllegalArgumentException("Page size cannot exceed 1000");
+        }
+        
+        int offset = (page - 1) * pageSize;
+        return userRepository.findByNameContaining(query, offset, pageSize);
+    }
 }
