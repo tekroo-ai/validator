@@ -124,4 +124,64 @@ class InputValidatorTest {
     void validateUrlReturnsFalseForEmptyString() {
         assertFalse(InputValidator.validateUrl(""));
     }
+
+    @Test
+    void validatePhoneNumberReturnsTrueForPlusOneFormat() {
+        assertTrue(InputValidator.validatePhoneNumber("+1-800-555-1234"));
+    }
+
+    @Test
+    void validatePhoneNumberReturnsTrueForParenthesesFormat() {
+        assertTrue(InputValidator.validatePhoneNumber("(800) 555-1234"));
+    }
+
+    @Test
+    void validatePhoneNumberReturnsTrueForDashFormat() {
+        assertTrue(InputValidator.validatePhoneNumber("800-555-1234"));
+    }
+
+    @Test
+    void validatePhoneNumberReturnsFalseForNumbers() {
+        assertFalse(InputValidator.validatePhoneNumber("12345"));
+    }
+
+    @Test
+    void validatePhoneNumberReturnsFalseForLetters() {
+        assertFalse(InputValidator.validatePhoneNumber("letters"));
+    }
+
+    @Test
+    void validatePhoneNumberReturnsFalseForEmptyString() {
+        assertFalse(InputValidator.validatePhoneNumber(""));
+    }
+
+    @Test
+    void validatePhoneNumberReturnsFalseForNull() {
+        assertFalse(InputValidator.validatePhoneNumber(null));
+    }
+
+    @Test
+    void validateCreditCardReturnsTrueForValidVisaNumber() {
+        assertTrue(InputValidator.validateCreditCard("4111111111111111"));
+    }
+
+    @Test
+    void validateCreditCardReturnsFalseForLuhnFailure() {
+        assertFalse(InputValidator.validateCreditCard("4111111111111112"));
+    }
+
+    @Test
+    void validateCreditCardReturnsFalseForLetters() {
+        assertFalse(InputValidator.validateCreditCard("411111111111111a"));
+    }
+
+    @Test
+    void validateCreditCardReturnsFalseForWrongLength() {
+        assertFalse(InputValidator.validateCreditCard("41111111111111"));
+    }
+
+    @Test
+    void validateCreditCardReturnsFalseForNull() {
+        assertFalse(InputValidator.validateCreditCard(null));
+    }
 }
