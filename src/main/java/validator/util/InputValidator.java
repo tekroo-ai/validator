@@ -74,14 +74,22 @@ public final class InputValidator {
      * Validates if the input string is a valid email address.
      * 
      * @param input the string to validate
-     * @return true if input is a valid email address, false otherwise
+     * @return ValidationResult.valid() for valid emails, ValidationResult.invalid(message) for invalid emails
      */
-    public static boolean validateEmail(String input) {
-        if (input == null || input.isEmpty()) {
-            return false;
+    public static ValidationResult validateEmail(String input) {
+        if (input == null) {
+            return ValidationResult.invalid("Email cannot be null");
         }
         
-        return EMAIL_PATTERN.matcher(input).matches();
+        if (input.isEmpty()) {
+            return ValidationResult.invalid("Email cannot be empty");
+        }
+        
+        if (EMAIL_PATTERN.matcher(input).matches()) {
+            return ValidationResult.valid();
+        } else {
+            return ValidationResult.invalid("Invalid email format");
+        }
     }
 
     /**
