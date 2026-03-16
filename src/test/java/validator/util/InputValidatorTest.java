@@ -62,32 +62,38 @@ class InputValidatorTest {
 
     @Test
     void validateEmailReturnsTrueForValidEmail() {
-        assertTrue(InputValidator.validateEmail("user@example.com"));
+        ValidationResult result = InputValidator.validateEmail("user@example.com");
+        assertTrue(result.isValid());
     }
 
     @Test
     void validateEmailReturnsFalseForInvalidEmailUserAtOnly() {
-        assertFalse(InputValidator.validateEmail("user@"));
+        ValidationResult result = InputValidator.validateEmail("user@");
+        assertFalse(result.isValid());
     }
 
     @Test
     void validateEmailReturnsFalseForInvalidEmailAtDomainOnly() {
-        assertFalse(InputValidator.validateEmail("@example.com"));
+        ValidationResult result = InputValidator.validateEmail("@example.com");
+        assertFalse(result.isValid());
     }
 
     @Test
     void validateEmailReturnsFalseForInvalidEmailPlaintext() {
-        assertFalse(InputValidator.validateEmail("plaintext"));
+        ValidationResult result = InputValidator.validateEmail("plaintext");
+        assertFalse(result.isValid());
     }
 
     @Test
     void validateEmailReturnsFalseForNull() {
-        assertFalse(InputValidator.validateEmail(null));
+        ValidationResult result = InputValidator.validateEmail(null);
+        assertFalse(result.isValid());
     }
 
     @Test
     void validateEmailReturnsFalseForEmptyString() {
-        assertFalse(InputValidator.validateEmail(""));
+        ValidationResult result = InputValidator.validateEmail("");
+        assertFalse(result.isValid());
     }
 
     @Test
