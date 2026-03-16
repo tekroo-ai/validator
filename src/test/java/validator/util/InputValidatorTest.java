@@ -59,4 +59,69 @@ class InputValidatorTest {
             assertInstanceOf(UnsupportedOperationException.class, e.getCause());
         }
     }
+
+    @Test
+    void validateEmailReturnsTrueForValidEmail() {
+        assertTrue(InputValidator.validateEmail("user@example.com"));
+    }
+
+    @Test
+    void validateEmailReturnsFalseForInvalidEmailUserAtOnly() {
+        assertFalse(InputValidator.validateEmail("user@"));
+    }
+
+    @Test
+    void validateEmailReturnsFalseForInvalidEmailAtDomainOnly() {
+        assertFalse(InputValidator.validateEmail("@example.com"));
+    }
+
+    @Test
+    void validateEmailReturnsFalseForInvalidEmailPlaintext() {
+        assertFalse(InputValidator.validateEmail("plaintext"));
+    }
+
+    @Test
+    void validateEmailReturnsFalseForNull() {
+        assertFalse(InputValidator.validateEmail(null));
+    }
+
+    @Test
+    void validateEmailReturnsFalseForEmptyString() {
+        assertFalse(InputValidator.validateEmail(""));
+    }
+
+    @Test
+    void validateUrlReturnsTrueForValidHttpUrl() {
+        assertTrue(InputValidator.validateUrl("http://example.com"));
+    }
+
+    @Test
+    void validateUrlReturnsTrueForValidHttpsUrlWithPath() {
+        assertTrue(InputValidator.validateUrl("https://example.com/path"));
+    }
+
+    @Test
+    void validateUrlReturnsFalseForInvalidFtpUrl() {
+        assertFalse(InputValidator.validateUrl("ftp://example.com"));
+    }
+
+    @Test
+    void validateUrlReturnsFalseForInvalidUrlNoScheme() {
+        assertFalse(InputValidator.validateUrl("example.com"));
+    }
+
+    @Test
+    void validateUrlReturnsFalseForInvalidUrlPlaintext() {
+        assertFalse(InputValidator.validateUrl("plaintext"));
+    }
+
+    @Test
+    void validateUrlReturnsFalseForNull() {
+        assertFalse(InputValidator.validateUrl(null));
+    }
+
+    @Test
+    void validateUrlReturnsFalseForEmptyString() {
+        assertFalse(InputValidator.validateUrl(""));
+    }
 }
